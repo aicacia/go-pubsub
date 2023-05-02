@@ -19,7 +19,7 @@ func TestPubSub(t *testing.T) {
 		t.Fatalf("Invalid subscriber count %d != 2", len(pubsub.Subscribers()))
 	}
 
-	pubsub.Publish(&Message{name: "Hello, world!"})
+	pubsub.Publish(Message{name: "Hello, world!"})
 
 	msg0, ok0 := <-subscriber0.C
 	if !ok0 {

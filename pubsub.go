@@ -6,7 +6,7 @@ const default_subscriber_channel_size = 1024
 
 type Subscriber[T any] struct {
 	pubsub *PubSub[T]
-	C      chan *T
+	C      chan T
 }
 
 func (s *Subscriber[T]) Close() {
@@ -33,7 +33,7 @@ func (ps *PubSub[T]) SetChannelSize(channel_size int) *PubSub[T] {
 	return ps
 }
 
-func (ps *PubSub[T]) Publish(value *T) {
+func (ps *PubSub[T]) Publish(value T) {
 	ps.mutex.RLock()
 	defer ps.mutex.RUnlock()
 	for _, subscriber := range ps.subscribers {
@@ -52,7 +52,7 @@ func (ps *PubSub[T]) Subscribe(channel_size ...int) *Subscriber[T] {
 	}
 	subscriber := Subscriber[T]{
 		pubsub: ps,
-		C:      make(chan *T, cs),
+		C:      make(chan T, cs),
 	}
 	ps.subscribers = append(ps.subscribers, &subscriber)
 	return &subscriber
