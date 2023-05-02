@@ -43,12 +43,16 @@ func (ps *PubSub[T]) Publish(value *T) {
 	}
 }
 
-func (ps *PubSub[T]) Subscribe() *Subscriber[T] {
+func (ps *PubSub[T]) Subscribe(channel_size ...int) *Subscriber[T] {
 	ps.mutex.Lock()
 	defer ps.mutex.Unlock()
+	var cs = ps.channel_size
+	if len(channel_size) > 0 {
+		cs = channel_size[0]
+	}
 	subscriber := Subscriber[T]{
 		pubsub: ps,
-		C:      make(chan *T, ps.channel_size),
+		C:      make(chan *T, cs),
 	}
 	ps.subscribers = append(ps.subscribers, &subscriber)
 	return &subscriber
@@ -73,10 +77,6 @@ func (ps *PubSub[T]) close(s *Subscriber[T]) {
 		}
 	}
 	if index != -1 {
-		ps.subscribers = removeIndex(ps.subscribers, index)
+		ps.subscribers = append(ps.subscribers[:index], ps.subscribers[index+1:]...)
 	}
-}
-
-func removeIndex[T any](slice []T, index int) []T {
-	return append(slice[:index], slice[index+1:]...)
 }
