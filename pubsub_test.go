@@ -3,7 +3,7 @@ package pubsub_test
 import (
 	"testing"
 
-	"github.com/aicacia/pubsub"
+	pubsub "github.com/aicacia/go-pubsub"
 )
 
 type Message struct {
