@@ -21,7 +21,6 @@ type PubSub[T any] struct {
 
 func NewPubSub[T any]() PubSub[T] {
 	return PubSub[T]{
-		mutex:        sync.RWMutex{},
 		channel_size: default_subscriber_channel_size,
 	}
 }
